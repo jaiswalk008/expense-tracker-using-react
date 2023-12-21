@@ -1,0 +1,36 @@
+.navbar >main{
+    font-style: italic;
+    margin-left: 10px;
+    font-size: large;
+    font-weight: 500;
+}
+.navbar >span{
+    background-color: rgb(207, 155, 130);
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+#complete{
+    color: rgba(13, 31, 105, 0.606);
+    font-weight: bold;
+    font-style: italic;
+}
+#complete:hover{
+    text-decoration: underline;
+    cursor:pointer;
+}
+#update{
+    color: white;
+    background-color: rgb(172, 128, 107);
+    border: 2px solid rgb(92, 70, 60);
+}
+#update:hover{
+    color: black;
+    background-color: rgb(219, 182, 165);
+}
+.profile-container{
+    width: 500px;
+    margin-left: 50px;
+    font-weight: 500;
+}
