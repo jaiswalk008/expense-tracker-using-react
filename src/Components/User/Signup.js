@@ -4,14 +4,14 @@ import axios from 'axios';
 import './user.css'
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 const Signup = () =>{
-    const [email , setEmail] = useState('');
-    const [password , setPassword] = useState('');
-    const [confirmPassword , setConfirmPassword] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
-    const emailChangeHandler = (e) =>{
-        setEmail(e.target.value);
-    }
-    const passwordChangeHandler = (e) => {setPassword (e.target.value)}
+        const [email , setEmail] = useState('');
+        const [password , setPassword] = useState('');
+        const [confirmPassword , setConfirmPassword] = useState('');
+        const [errorMessage, setErrorMessage] = useState('');
+        const emailChangeHandler = (e) =>{
+            setEmail(e.target.value);
+        }
+        const passwordChangeHandler = (e) => {setPassword (e.target.value)}
     const confirmPasswordChangeHandler = (e) => {setConfirmPassword (e.target.value)}
 
     const signupHandler = async (e) =>{
@@ -25,7 +25,7 @@ const Signup = () =>{
             try {
                 const res = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key='+process.env.REACT_APP_AUTH_KEY,
             userDetails);
-                console.log(res.data);
+                // console.log(res.data);
                 setErrorMessage('');
             } catch (error) {
                 console.log(error);
