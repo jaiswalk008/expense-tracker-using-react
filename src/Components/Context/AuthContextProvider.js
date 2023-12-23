@@ -15,9 +15,10 @@ export const AuthContextProvider = (props) =>{
         setToken(token);
     }
     const logoutHandler =() =>{
-        // console.log('logout');
+        console.log('logout');
         history.push('/login');
-        setToken('');
+        addToken('');
+        // localStorage.setItem('')
         
     }
     const authCtx={

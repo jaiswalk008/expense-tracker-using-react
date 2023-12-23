@@ -36,3 +36,15 @@
     border: 2px solid rgb(82, 108, 237) ;
     border-radius: 5px;
 }
+.forgot-password{
+    margin-top: 10px;
+    background-color: rgb(35, 139, 139);
+    color: wheat;
+    padding: 8px 8px;
+    width: fit-content;
+}
+.forgot-password:hover{
+    cursor: pointer;
+    background-color: rgb(21, 90, 90);
+    color: white;
+}

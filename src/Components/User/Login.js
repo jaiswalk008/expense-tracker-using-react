@@ -25,12 +25,22 @@ const Login = () => {
         try {
             const res = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key='+process.env.REACT_APP_AUTH_KEY,
         userDetails);
-            // console.log(res.data);
+            console.log(res.data);
             setErrorMessage('');
             authCtx.setToken(res.data.idToken);
             history.push('/expense');
         } catch (error) {
             console.log(error);
+            setErrorMessage(error.response.data.error.message);
+        }
+    }
+
+    const forgotPasswordHandler = async () =>{
+        try {
+            const res = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key='+process.env.REACT_APP_AUTH_KEY,
+            {requestType:"PASSWORD_RESET" ,
+        email:email})
+        } catch (error) {
             setErrorMessage(error.response.data.error.message);
         }
     }
@@ -45,6 +55,7 @@ const Login = () => {
                 <button className='btn w-100 mt-1 btn-primary'>Login</button>
             </form>
             {errorMessage.length>0 && <p className='message-alert'>{errorMessage}</p>}
+            <p className='forgot-password' onClick={forgotPasswordHandler}>Forgot Password</p>
         </div>
         <p className='signup'><Link to="/signup">Don't have an account? Signup</Link></p>
     </div>
