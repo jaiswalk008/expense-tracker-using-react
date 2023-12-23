@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 export const AuthContext = React.createContext({
     token:'',
     setToken:(token) =>{},
@@ -8,13 +8,17 @@ export const AuthContext = React.createContext({
 
 export const AuthContextProvider = (props) =>{
     const initialToken = localStorage.getItem('token');
+    const history = useHistory();
     const [token, setToken] = useState(initialToken);
     const addToken = (token) => {
         localStorage.setItem('token',token);
         setToken(token);
     }
     const logoutHandler =() =>{
-        console.log('logout');
+        // console.log('logout');
+        history.push('/login');
+        setToken('');
+        
     }
     const authCtx={
         token:token,

@@ -1,14 +1,16 @@
-import { useState } from 'react';
+import { useState , useContext } from 'react';
 import './Expense.css';
 import Profile from './Profile';
 import axios from 'axios';
+import { AuthContext } from '../Context/AuthContextProvider';
 
 const Expense = () =>{
     const [showProfileComponent , setShowProfileComponent] = useState(false);
     const emailVerificationStatus = localStorage.getItem('emailVerified');
-    const token = localStorage.getItem('token');
+    // const token = localStorage.getItem('token');
     const [error , setError] = useState('');
     const [emailVerified , setEmailVerified] = useState(!!emailVerificationStatus);
+    const authCtx = useContext(AuthContext);
     const completeProfileHandler = () =>{
         // console.log('hello');
         setShowProfileComponent(prevState => !prevState)
@@ -17,7 +19,7 @@ const Expense = () =>{
         try {
             const res = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key='+process.env.REACT_APP_AUTH_KEY,
         {requestType:'VERIFY_EMAIL',
-    idToken:token});
+    idToken:authCtx.token});
             setEmailVerified(true);
             localStorage.setItem('emailVerified',true);
         } catch (error) {
@@ -25,11 +27,16 @@ const Expense = () =>{
         }
         
     }
+    
     return (
         <div>
             <nav className="navbar">
                 <main>Welcome to Expense Tracker</main>
+                <div>
                 <span>Your profile is Incomplete <span onClick={completeProfileHandler} id="complete">Complete now</span></span>
+                <button className='btn logout'  onClick={authCtx.logout}>Logout</button>
+                </div>
+                
             </nav>
             <hr></hr>
             {showProfileComponent && <Profile clickHander={completeProfileHandler}/>}

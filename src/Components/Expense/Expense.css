@@ -4,12 +4,19 @@
     font-size: large;
     font-weight: 500;
 }
-.navbar >span {
+.navbar span {
     background-color: rgb(207, 155, 130);
     color: white;
     padding: 5px;
     border-radius: 5px;
     margin-right: 10px;
+}
+.logout{
+    background-color:rgb(207, 155, 130) ;
+}
+.logout:hover{
+    background-color:rgb(214, 94, 38) ;
+    color: white;
 }
 #complete{
     color: rgba(13, 31, 105, 0.606);
