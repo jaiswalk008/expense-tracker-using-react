@@ -3,9 +3,12 @@ import './Expense.css';
 import Profile from './Profile';
 import axios from 'axios';
 import { AuthContext } from '../Context/AuthContextProvider';
+import ExpenseForm from './ExpenseForm';
+import ExpenseList from './ExpenseList';
 
 const Expense = () =>{
     const [showProfileComponent , setShowProfileComponent] = useState(false);
+    const [expenseList , setExpenseList] = useState([]);
     const emailVerificationStatus = localStorage.getItem('emailVerified');
     // const token = localStorage.getItem('token');
     const [error , setError] = useState('');
@@ -27,7 +30,11 @@ const Expense = () =>{
         }
         
     }
-    
+    const addExpenseHandler= (expense) =>{
+        const updatedExpenseList = [...expenseList,expense];
+        setExpenseList(updatedExpenseList);
+    }
+
     return (
         <div>
             <nav className="navbar">
@@ -44,6 +51,8 @@ const Expense = () =>{
                 {error.length>0 && <main>{error}</main>}
                 <p onClick={verifyEmail} id='verify-email'>Verify your email</p>
             </div>}
+            <ExpenseForm onAddExpenseHandler={addExpenseHandler}/>
+            <ExpenseList expenseList={expenseList}/>
         </div>
     )
 }
