@@ -1,7 +1,23 @@
+import axios from 'axios'
 import './Expense.css'
+import { ExpenseContext } from '../Context/ExpenseContextProvider'
+import { useContext } from 'react'
 const ExpenseCard = (props) =>{
+    const expenseCtx = useContext(ExpenseContext);
+    const editExpense = (id) =>{
+        expenseCtx.updateExpense(props.id)
+        expenseCtx.deleteExpense(id);
+    }
+    const deleteExpense = async (id) =>{
+        try {
+            await axios.delete(`https://expense-tracker-911b6-default-rtdb.firebaseio.com/expenses/${id}.json`)
+            expenseCtx.deleteExpense(id);
+        } catch (error) {
+            console.log(error);
+        }
+    }
     return (
-        <div className="expense-card">
+        <div className="expense-card" id={props.id}>
             <nav className='navbar '>{props.category}</nav>
                 <div className='d-flex m-2'>
                     <div className='me-2'>
@@ -14,8 +30,8 @@ const ExpenseCard = (props) =>{
                     </div>
                     </div>
                     <div className='float-end m-2'>
-                        <button className='btn btn-danger me-1'>edit</button>
-                        <button className='btn-dark btn'>delete</button>
+                        <button onClick={() => editExpense(props.id) } className='btn btn-danger me-1'>Edit</button>
+                        <button onClick={() => deleteExpense(props.id)} className='btn-dark btn'>Delete</button>
                     </div>
                 </div>
     )
