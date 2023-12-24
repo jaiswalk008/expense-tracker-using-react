@@ -6,7 +6,7 @@ const ExpenseList = (props) => {
             <h1 className="text-left">My Expenses</h1>
             <div className="expenses-container">
                 {props.expenseList.map((expense) =>{
-                    return <ExpenseCard key={Math.random()} amount={expense.amount}
+                    return <ExpenseCard key={expense.id} amount={expense.amount}
                     category={expense.category} expenseName= {expense.expenseName} description={expense.description} />
                 })}
                 

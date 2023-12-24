@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import Input from '../UI/Input';
-
+import axios from 'axios';
 const ExpenseForm = ({onAddExpenseHandler}) =>{
     const [expenseName,setExpenseName] = useState('');
     const [description , setDescription] = useState('');
-    const [amount , setAmount]= useState();
+    const [amount , setAmount]= useState('');
     const [category , setCategory] = useState('Food');
 
     const amountChangeHandler = (e) => setAmount(e.target.value);
@@ -12,7 +12,7 @@ const ExpenseForm = ({onAddExpenseHandler}) =>{
     const descriptionChangeHandler = (e) => {setDescription(e.target.value)}
     const categoryChangeHandler = (e) => {setCategory(e.target.value)}
     
-    const expenseFormHandler = (e) =>{
+    const expenseFormHandler = async (e) =>{
         e.preventDefault();
         const expenseDetails={
             expenseName:expenseName,
@@ -20,8 +20,13 @@ const ExpenseForm = ({onAddExpenseHandler}) =>{
             description:description,
             category:category,
         }
-        onAddExpenseHandler(expenseDetails);
-        console.log(expenseDetails);
+        try {
+            const res = await axios.post('https://expense-tracker-911b6-default-rtdb.firebaseio.com/expenses.json',expenseDetails);
+            console.log(res);
+            onAddExpenseHandler({...expenseDetails,id:res.data});
+        } catch (error) {
+            console.log(error.response);
+        }
     }
     return (
         <div className='d-flex justify-content-center'>

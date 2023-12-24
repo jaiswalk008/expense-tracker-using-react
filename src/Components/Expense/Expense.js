@@ -1,4 +1,4 @@
-import { useState , useContext } from 'react';
+import { useState , useContext, useEffect } from 'react';
 import './Expense.css';
 import Profile from './Profile';
 import axios from 'axios';
@@ -30,10 +30,36 @@ const Expense = () =>{
         }
         
     }
+    const fetchExpenseList = async ()=>{
+        try {
+            const res = await axios.get('https://expense-tracker-911b6-default-rtdb.firebaseio.com/expenses.json');
+            
+            const keys = (Object.keys(res.data))
+            const expenses = Object.values(res.data).map((element ,index) => {
+                // console.log(element)
+                const expenseDetails ={
+                    id:keys[index],
+                    expenseName:element.expenseName,
+                    amount:element.amount,
+                    description:element.description,
+                    category:element.category,
+                }
+                return expenseDetails;
+            })
+            setExpenseList(expenses);
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    useEffect(() =>{
+        fetchExpenseList();
+    },[])
     const addExpenseHandler= (expense) =>{
         const updatedExpenseList = [...expenseList,expense];
         setExpenseList(updatedExpenseList);
     }
+
 
     return (
         <div>
