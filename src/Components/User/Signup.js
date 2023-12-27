@@ -23,7 +23,7 @@ const Signup = () =>{
         if(password.trim()!==confirmPassword.trim()) setErrorMessage('Passwords do not match')
         else{
             try {
-                const res = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key='+process.env.REACT_APP_AUTH_KEY,
+                await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key='+process.env.REACT_APP_AUTH_KEY,
             userDetails);
                 // console.log(res.data);
                 setErrorMessage('');

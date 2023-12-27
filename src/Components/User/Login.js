@@ -1,17 +1,19 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import './user.css';
 import Input from '../UI/Input'
 import { Link, useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import axios from 'axios';
-import {AuthContext} from '../Context/AuthContextProvider'
-
+ 
+import { useDispatch  } from 'react-redux';
+import { authActions } from '../Context/store';
 const Login = () => {
     const [email , setEmail] = useState('');
     const [password , setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    const authCtx = useContext(AuthContext);
+   
     const history = useHistory();
-
+    
+    const dispatch = useDispatch();
     const emailChangeHandler = (e) =>{
         setEmail(e.target.value);
     }
@@ -27,8 +29,11 @@ const Login = () => {
         userDetails);
             console.log(res.data);
             setErrorMessage('');
-            authCtx.setToken(res.data.idToken);
+            dispatch(authActions.setToken(res.data.idToken));
+            
             history.push('/expense');
+            console.log('history')
+            console.log(history)
         } catch (error) {
             console.log(error);
             setErrorMessage(error.response.data.error.message);
@@ -37,7 +42,7 @@ const Login = () => {
 
     const forgotPasswordHandler = async () =>{
         try {
-            const res = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key='+process.env.REACT_APP_AUTH_KEY,
+            await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key='+process.env.REACT_APP_AUTH_KEY,
             {requestType:"PASSWORD_RESET" ,
         email:email})
         } catch (error) {

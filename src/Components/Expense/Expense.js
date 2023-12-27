@@ -1,19 +1,27 @@
-import { useState , useContext } from 'react';
+import { useState  } from 'react';
 import './Expense.css';
 import Profile from './Profile';
 import axios from 'axios';
-import { AuthContext } from '../Context/AuthContextProvider';
+// import { AuthContext } from '../Context/AuthContextProvider';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import ExpenseForm from './ExpenseForm';
 import ExpenseList from './ExpenseList';
-import { ExpenseContext } from '../Context/ExpenseContextProvider';
+// import { ExpenseContext } from '../Context/ExpenseContextProvider';
+import { useDispatch , useSelector } from 'react-redux';
+import { authActions } from '../Context/store';
+// import { expenseActions } from '../Context/store';
 const Expense = () =>{
+    const dispatch = useDispatch();
+    const history = useHistory();
     const [showProfileComponent , setShowProfileComponent] = useState(false);
     const emailVerificationStatus = localStorage.getItem('emailVerified');
     
     const [error , setError] = useState('');
     const [emailVerified , setEmailVerified] = useState(!!emailVerificationStatus);
-    const authCtx = useContext(AuthContext);
-    const expenseCtx = useContext(ExpenseContext);
+    // const authCtx = useContext(AuthContext);
+    // const expenseCtx = useContext(ExpenseContext);
+
+    const {expenseList} = useSelector((state) => state.expense);
     const completeProfileHandler = () =>{
         setShowProfileComponent(prevState => !prevState)
     }
@@ -21,7 +29,7 @@ const Expense = () =>{
         try {
             await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key='+process.env.REACT_APP_AUTH_KEY,
         {requestType:'VERIFY_EMAIL',
-    idToken:authCtx.token});
+    idToken:localStorage.getItem('token')});
             setEmailVerified(true);
             localStorage.setItem('emailVerified',true);
         } catch (error) {
@@ -30,7 +38,10 @@ const Expense = () =>{
         
     }
    
-    
+    const logoutHandler = () =>{
+        dispatch(authActions.logout());
+        history.push('/login');
+    }
 
     return (
         <div>
@@ -38,7 +49,7 @@ const Expense = () =>{
                 <main>Welcome to Expense Tracker</main>
                 <div>
                 <span>Your profile is Incomplete <span onClick={completeProfileHandler} id="complete">Complete now</span></span>
-                <button className='btn logout'  onClick={authCtx.logout}>Logout</button>
+                <button className='btn logout'  onClick={logoutHandler}>Logout</button>
                 </div>
                 
             </nav>
@@ -49,7 +60,7 @@ const Expense = () =>{
                 <p onClick={verifyEmail} id='verify-email'>Verify your email</p>
             </div>}
             <ExpenseForm/>
-            <ExpenseList expenseList={expenseCtx.expenseList}/>
+            <ExpenseList expenseList={expenseList}/>
         </div>
     )
 }

@@ -5,7 +5,7 @@ export const ExpenseContext= React.createContext({
     addExpense:(expense) =>{},
     updateExpense:(id) =>{},
     getExpenseForUpdating:{},
-    deleteExpense:(id) =>{}
+    deleteExpense:(id) =>{},
 })
 export const ExpenseContextProvider = (props) =>{
     const [expenseList, setExpenseList] = useState([]);
