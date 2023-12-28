@@ -1,7 +1,7 @@
-import { useContext, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Input from '../UI/Input';
 import axios from 'axios';
-import {ExpenseContext} from '../Context/ExpenseContextProvider';
+// import {ExpenseContext} from '../Context/ExpenseContextProvider';
 import { useDispatch , useSelector } from 'react-redux';
 import {expenseActions} from '../Context/store';
 const ExpenseForm = () =>{
@@ -11,44 +11,52 @@ const ExpenseForm = () =>{
     const [category , setCategory] = useState('Food');
     const [editExpense , setEditExpense] = useState(false);
     const [id, setId] = useState(null);
-    const expenseCtx = useContext(ExpenseContext);
+    // const expenseCtx = useContext(ExpenseContext);
     const amountChangeHandler = (e) => setAmount(e.target.value);
     const nameChangeHandler= (e) => {setExpenseName(e.target.value)}
     const descriptionChangeHandler = (e) => {setDescription(e.target.value)}
     const categoryChangeHandler = (e) => {setCategory(e.target.value)}
     const dispatch = useDispatch();
-    const {expenseList , updateExpense} = useSelector(state => state.expense);
-    const fetchExpenseList = async ()=>{
-        try {
-            const res = await axios.get('https://expense-tracker-911b6-default-rtdb.firebaseio.com/expenses.json');
-            
-            const keys = (Object.keys(res.data))
-            const expenses = Object.values(res.data).map((element ,index) => {
-                
-                const expenseDetails ={
-                    id:keys[index],
-                    expenseName:element.expenseName,
-                    amount:element.amount,
-                    description:element.description,
-                    category:element.category,
-                }
-                return expenseDetails;
-            })
-            dispatch(expenseActions.setExpenseList(expenses));
+    const {expenseList , updateExpense , total} = useSelector(state => state.expense);
+    const {formStyle} = useSelector(state => state.theme);
+    // console.log(formStyle)
+    const fetchExpenseList = useCallback( async ()=>{
+        // console.log('fetching')
+        
+       try {
+           const res = await axios.get('https://expense-tracker-911b6-default-rtdb.firebaseio.com/expenses.json');
+           
+           const keys = (Object.keys(res.data))
+           dispatch(expenseActions.resetTotal());
+           const expenses = Object.values(res.data).map((element ,index) => {
+               
+               const expenseDetails ={
+                   id:keys[index],
+                   expenseName:element.expenseName,
+                   amount:element.amount,
+                   description:element.description,
+                   category:element.category,
+               }
+               
+               dispatch(expenseActions.addTotal(element.amount));
+               return expenseDetails;
+           })
 
-        } catch (error) {
-            console.log(error);
-        }
-    }
+           dispatch(expenseActions.setExpenseList(expenses));
+
+       } catch (error) {
+           console.log(error);
+       }
+   })
     useEffect(() =>{
         //getting expense for editing   
         const expenseDetails = updateExpense;
-        console.log(expenseDetails);
+        // console.log(expenseDetails);
         
         if( Object.keys(expenseDetails).length> 0){
-            console.log(expenseDetails)
+            // console.log(expenseDetails)
             setId(expenseDetails.id);
-            console.log(id)
+            // console.log(id)
             setAmount(expenseDetails.amount);
             setCategory(expenseDetails.category);
             setExpenseName(expenseDetails.expenseName);
@@ -64,7 +72,7 @@ const ExpenseForm = () =>{
     const expenseFormHandler = async (e) =>{
 
         e.preventDefault();
-        console.log(id)
+        // console.log(id)
         const expenseDetails={
             expenseName:expenseName,
             amount:amount,
@@ -77,15 +85,17 @@ const ExpenseForm = () =>{
             // console.log(res.data.name);
             dispatch(expenseActions.addExpense({...expenseDetails,id:res.data.name}));
             // expenseCtx.addExpense({...expenseDetails,id:res.data});
-            console.log('expense added')
+            // console.log('expense added')
+            dispatch(expenseActions.addTotal(expenseDetails.amount));
            }
            else{
-            console.log('updating')
+            // console.log('updating')
             // console.log(id)
             const res = await axios.put(`https://expense-tracker-911b6-default-rtdb.firebaseio.com/expenses/${id}.json`,expenseDetails);
-            console.log(res.data);
+            // console.log(res.data);
             dispatch(expenseActions.addExpense({...expenseDetails,id:res.data}))
-            console.log('expense updated')
+            // console.log('expense updated')
+            dispatch(expenseActions.addTotal(expenseDetails.amount));
             setEditExpense(false);
            }
            
@@ -94,9 +104,9 @@ const ExpenseForm = () =>{
         }
     }
     return (
-        <div className='d-flex justify-content-center'>
+        <div className='d-flex justify-content-center' >
 
-            <div className='expense-container'>
+            <div className='expense-container' style={formStyle}>
                 
             <form onSubmit={expenseFormHandler}>
             <div className='d-flex justify-content-center'><Input id="amount" placeholder="0" label="" type="text" value={amount} onChange={amountChangeHandler} /></div>

@@ -1,10 +1,23 @@
 import './Expense.css';
-import ExpenseCard from './ExpenseCard';    
+import ExpenseCard from './ExpenseCard';   
+import { useSelector, useDispatch } from 'react-redux'; 
+import { authActions } from '../Context/store';
 const ExpenseList = (props) => {
+    const dispatch = useDispatch();
+    const {premium} = useSelector(state => state.auth);
     
+    const premiumHandler = () =>{
+        dispatch(authActions.setPremium());
+    }
     return(
         <div className="container mb-2">
-            <h1 className="text-left">My Expenses</h1>
+            <div className='d-flex'>
+                <div className='w-50'>
+                    <h1 className="text-left">My Expenses</h1>  
+                    <h5 className='text-secondary '>Total Expenses - {props.total}</h5>
+                </div>
+                {!premium && props.total>10000 && <div className='mt-2 w-50'><button onClick={premiumHandler} className='btn float-end btn-danger'>Activate Premium</button></div>}
+            </div>
             <div className="expenses-container">
                 {props.expenseList.map((expense) =>{
                     return <ExpenseCard key={expense.id} id={expense.id} amount={expense.amount}

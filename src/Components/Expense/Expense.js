@@ -8,7 +8,9 @@ import ExpenseForm from './ExpenseForm';
 import ExpenseList from './ExpenseList';
 // import { ExpenseContext } from '../Context/ExpenseContextProvider';
 import { useDispatch , useSelector } from 'react-redux';
-import { authActions } from '../Context/store';
+import { authActions, themeActions } from '../Context/store';
+// import { themeActions } from '../Context/store';
+import Header from '../UI/Header';
 // import { expenseActions } from '../Context/store';
 const Expense = () =>{
     const dispatch = useDispatch();
@@ -21,7 +23,7 @@ const Expense = () =>{
     // const authCtx = useContext(AuthContext);
     // const expenseCtx = useContext(ExpenseContext);
 
-    const {expenseList} = useSelector((state) => state.expense);
+    const {expenseList , total} = useSelector((state) => state.expense);
     const completeProfileHandler = () =>{
         setShowProfileComponent(prevState => !prevState)
     }
@@ -39,20 +41,15 @@ const Expense = () =>{
     }
    
     const logoutHandler = () =>{
+        dispatch(themeActions.toggleTheme());
         dispatch(authActions.logout());
         history.push('/login');
     }
 
     return (
         <div>
-            <nav className="navbar">
-                <main>Welcome to Expense Tracker</main>
-                <div>
-                <span>Your profile is Incomplete <span onClick={completeProfileHandler} id="complete">Complete now</span></span>
-                <button className='btn logout'  onClick={logoutHandler}>Logout</button>
-                </div>
-                
-            </nav>
+            
+            <Header logoutHandler = {logoutHandler}/>
             <hr></hr>
             {showProfileComponent && <Profile clickHander={completeProfileHandler}/>}
            {!emailVerified && <div className='d-flex justify-content-center'>
@@ -60,7 +57,7 @@ const Expense = () =>{
                 <p onClick={verifyEmail} id='verify-email'>Verify your email</p>
             </div>}
             <ExpenseForm/>
-            <ExpenseList expenseList={expenseList}/>
+            <ExpenseList total={total} expenseList={expenseList}/>
         </div>
     )
 }

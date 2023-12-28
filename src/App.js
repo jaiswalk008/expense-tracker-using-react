@@ -7,11 +7,10 @@ import { Route , Redirect} from 'react-router-dom/cjs/react-router-dom.min';
 import { useSelector } from 'react-redux';
 function App() {
   const {token} = useSelector(state => state.auth);
-  // console.log(token)
-
-  // console.group(authCtx)
+  const {pageStyle} = useSelector(state => state.theme);
+  
   return (
-    <div className="App">
+    <div style={pageStyle} className="App">
       <Route path="/" exact>
         <Redirect to="/login"></Redirect>
       </Route>

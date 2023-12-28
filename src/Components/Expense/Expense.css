@@ -68,7 +68,7 @@
     padding: 20px;
     width: 400px;
     font-weight: 500;
-
+    border-radius: 10px;
 }
 #amount{
     background: transparent;
