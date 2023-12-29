@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-
+import { expenseActions } from "./store";
+import axios from "axios";
 const initialExpenseState ={
     expenseList:[],
     updateExpense:{},
@@ -35,4 +36,35 @@ const expenseSlice = createSlice({
         
     }
 })
+export const fetchExpenseList = () =>{
+    return async (dispatch) =>{
+        const getExpenses =async () =>{
+            const res = await axios.get('https://expense-tracker-911b6-default-rtdb.firebaseio.com/expenses.json');
+            
+            const keys = (Object.keys(res.data))
+            dispatch(expenseActions.resetTotal());
+            const expenses = Object.values(res.data).map((element ,index) => {
+                
+                const expenseDetails ={
+                    id:keys[index],
+                    expenseName:element.expenseName,
+                    amount:element.amount,
+                    description:element.description,
+                    category:element.category,
+                }
+                
+                dispatch(expenseActions.addTotal(element.amount));
+                return expenseDetails;
+            })
+ 
+            dispatch(expenseActions.setExpenseList(expenses));
+        }
+        try {
+           await getExpenses();
+ 
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
 export default expenseSlice;

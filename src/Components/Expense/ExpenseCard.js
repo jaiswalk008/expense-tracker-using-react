@@ -1,19 +1,17 @@
 import axios from 'axios'
 import './Expense.css'
-// import { ExpenseContext } from '../Context/ExpenseContextProvider'
-// import { useContext } from 'react'
-import { useDispatch , useSelector } from 'react-redux'
+import { useDispatch  } from 'react-redux'
 import {expenseActions} from '../Context/store';
 
 const ExpenseCard = (props) =>{
-    // const expenseCtx = useContext(ExpenseContext);
+
     const dispatch = useDispatch();
     
     const editExpense = (id) =>{
         dispatch(expenseActions.updateExpenseDetails(id));
-        // expenseCtx.updateExpense(props.id)
+       
         dispatch(expenseActions.deleteExpense(id));
-        // expenseCtx.deleteExpense(id);
+
     }
     const deleteExpense = async (id) =>{
         try {

@@ -11,8 +11,8 @@ const Header = (props) =>{
         dispatch(themeActions.toggleTheme());
     }
     const downloadExpenses= () =>{
-        console.log('hello');
-        console.log(expenseList)
+      
+        // console.log(expenseList)
         generateCSV(expenseList);
     }
     return (
