@@ -1,21 +1,22 @@
 import axios from 'axios'
 import './Expense.css'
-import { useDispatch  } from 'react-redux'
+import { useDispatch, useSelector  } from 'react-redux'
 import {expenseActions} from '../Context/store';
-
+import useEmail from '../Helpers/useEmail';
 const ExpenseCard = (props) =>{
 
     const dispatch = useDispatch();
-    
+    const token = useSelector(state => state.auth);
+    const email = useEmail();
     const editExpense = (id) =>{
         dispatch(expenseActions.updateExpenseDetails(id));
-       
+        
         dispatch(expenseActions.deleteExpense(id));
 
     }
     const deleteExpense = async (id) =>{
         try {
-            await axios.delete(`https://expense-tracker-911b6-default-rtdb.firebaseio.com/expenses/${id}.json`)
+            await axios.delete(`https://expense-tracker-911b6-default-rtdb.firebaseio.com/${email}-expenses/${id}.json`)
             dispatch(expenseActions.deleteExpense(id));
         } catch (error) {
             console.log(error);

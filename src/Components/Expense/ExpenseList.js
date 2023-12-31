@@ -5,6 +5,7 @@ import { authActions } from '../Context/store';
 const ExpenseList = (props) => {
     const dispatch = useDispatch();
     const {premium} = useSelector(state => state.auth);
+    const {total} = useSelector(state => state.expense)
     
     const premiumHandler = () =>{
         dispatch(authActions.setPremium());
@@ -16,7 +17,8 @@ const ExpenseList = (props) => {
                     <h1 className="text-left">My Expenses</h1>  
                     <h5 className='text-secondary '>Total Expenses - {props.total}</h5>
                 </div>
-                {!premium && props.total>10000 && <div className='mt-2 w-50'><button onClick={premiumHandler} className='btn float-end btn-danger'>Activate Premium</button></div>}
+                {console.log(premium , total)}
+                {(!premium) && (total>=10000  && <div className='mt-2 w-50'><button onClick={premiumHandler} className='btn float-end btn-danger'>Activate Premium</button></div>)}
             </div>
             <div className="expenses-container">
                 {props.expenseList.map((expense) =>{

@@ -30,7 +30,7 @@ const Login = () => {
             console.log(res.data);
             setErrorMessage('');
             dispatch(authActions.setToken(res.data.idToken));
-            
+            localStorage.setItem('email',userDetails.email);
             history.push('/expense');
             console.log('history')
             console.log(history)

@@ -1,7 +1,7 @@
 import {  useEffect, useState } from 'react';
 import Input from '../UI/Input';
 import axios from 'axios';
-
+import useEmail from '../Helpers/useEmail';
 import { useDispatch , useSelector } from 'react-redux';
 import {expenseActions} from '../Context/store';
 import { fetchExpenseList } from '../Context/expense';
@@ -12,7 +12,7 @@ const ExpenseForm = () =>{
     const [category , setCategory] = useState('Food');
     const [editExpense , setEditExpense] = useState(false);
     const [id, setId] = useState(null);
-
+    const email = useEmail();
     const amountChangeHandler = (e) => setAmount(e.target.value);
     const nameChangeHandler= (e) => {setExpenseName(e.target.value)}
     const descriptionChangeHandler = (e) => {setDescription(e.target.value)}
@@ -20,12 +20,11 @@ const ExpenseForm = () =>{
     const dispatch = useDispatch();
     const {updateExpense } = useSelector(state => state.expense);
     const {formStyle} = useSelector(state => state.theme);
+    const {token} = useSelector(state => state.auth);
    
     useEffect(() =>{
      
         const expenseDetails = updateExpense;
-
-        
         if( Object.keys(expenseDetails).length> 0){
  
             setId(expenseDetails.id);
@@ -40,7 +39,7 @@ const ExpenseForm = () =>{
     },[updateExpense])
     
     useEffect(() =>{
-        dispatch(fetchExpenseList() );
+        dispatch(fetchExpenseList(email) );
     },[dispatch])
     const expenseFormHandler = async (e) =>{
 
@@ -54,7 +53,7 @@ const ExpenseForm = () =>{
         }
         try {
            if(!editExpense){
-            const res = await axios.post('https://expense-tracker-911b6-default-rtdb.firebaseio.com/expenses.json',expenseDetails);
+            const res = await axios.post(`https://expense-tracker-911b6-default-rtdb.firebaseio.com/${email}-expenses.json`,expenseDetails);
         
             dispatch(expenseActions.addExpense({...expenseDetails,id:res.data.name}));
   
@@ -62,7 +61,7 @@ const ExpenseForm = () =>{
            }
            else{
           
-            const res = await axios.put(`https://expense-tracker-911b6-default-rtdb.firebaseio.com/expenses/${id}.json`,expenseDetails);
+            const res = await axios.put(`https://expense-tracker-911b6-default-rtdb.firebaseio.com/${email}-expenses/${id}.json`,expenseDetails);
           
             dispatch(expenseActions.addExpense({...expenseDetails,id:res.data}))
     

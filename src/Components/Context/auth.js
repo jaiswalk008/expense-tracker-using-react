@@ -1,12 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-// import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 const initalToken = localStorage.getItem('token');
-const isPremium = localStorage.getItem('token');
+const isPremium = localStorage.getItem('premium');
 const initialAuthState = {
     token:initalToken || '' ,
     premium:isPremium || false,
 }
-// const history = useHistory();
+console.log(initialAuthState)
 const authSlice = createSlice({
     name:'authentication',
     initialState : initialAuthState,
@@ -17,12 +16,11 @@ const authSlice = createSlice({
             
         },
         logout(state){
-            // history.push('/login');
             state.token='';
             state.premium=false;
             localStorage.setItem('token',state.token);
             localStorage.setItem('premium',state.premium);
-           
+            localStorage.removeItem('email');
 
         },
         setPremium(state){

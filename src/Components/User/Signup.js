@@ -2,12 +2,13 @@ import { useState } from 'react';
 import Input from '../UI/Input';
 import axios from 'axios';
 import './user.css'
-import { Link } from 'react-router-dom/cjs/react-router-dom.min';
+import { Link , useHistory} from 'react-router-dom/cjs/react-router-dom.min';
 const Signup = () =>{
         const [email , setEmail] = useState('');
         const [password , setPassword] = useState('');
         const [confirmPassword , setConfirmPassword] = useState('');
         const [errorMessage, setErrorMessage] = useState('');
+        const history = useHistory();
         const emailChangeHandler = (e) =>{
             setEmail(e.target.value);
         }
@@ -26,6 +27,7 @@ const Signup = () =>{
                 await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key='+process.env.REACT_APP_AUTH_KEY,
             userDetails);
                 // console.log(res.data);
+                history.push('/login');
                 setErrorMessage('');
             } catch (error) {
                 console.log(error);

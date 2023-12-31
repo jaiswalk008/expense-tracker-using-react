@@ -35,6 +35,11 @@ const themeSlice = createSlice({
             }
             
         },
+        resetThemeState: (state) => {
+            state.mode = 'light';
+            state.pageStyle = initialThemeState.pageStyle;
+            state.formStyle = initialThemeState.formStyle;
+        },
         
     }
 })
